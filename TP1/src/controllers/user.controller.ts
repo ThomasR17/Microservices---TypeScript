@@ -54,6 +54,7 @@ export const getUserByID = (request: CustomRequestParams, reply: FastifyReply) =
 interface CustomRequestBody extends FastifyRequest{
     body: {
         name: string
+        score: number
     }
 } 
 
@@ -63,9 +64,40 @@ export const addUser = (request: CustomRequestBody, reply: FastifyReply) => {
     const newUser: IUser = ({
         id: newId,
         name: request.body.name,
+        score: request.body.score,
     })
     console.log(newUser);
     staticUsers.push(newUser);
 
     reply.send({ data: newUser, message: 'User added successfully' });
 }
+
+import type * as s from 'zapatos/schema'
+import * as db from 'zapatos/db'
+import pool from '../db/pgPool'
+
+export const dblistUsers = 
+  async (request: FastifyRequest, reply: FastifyReply) => {
+    return db.sql<s.users.SQL, s.users.Selectable[]>`SELECT * FROM ${"users"}`
+    .run(pool)
+    .then((users) => ({ data: users }))
+    // Or .then((users) => reply.send({ data: users }))
+}
+
+
+export const dbaddUsers = async (request: CustomRequestBody, reply: FastifyReply) => {
+    const { name, score } = request.body;
+
+    try {
+        // Utilisation correcte de la requête SQL générée par Zapatos
+        const result = await db.sql<s.users.SQL, s.users.Selectable[]>`
+            INSERT INTO ${"users"} (name, score)
+            VALUES (${'name'}, ${'score'})
+        `.run(pool);
+
+        return { data: result };
+    } catch (error) {
+        console.error('Erreur lors de l\'ajout d\'utilisateur :', error);
+        reply.status(500).send({ error: 'Erreur lors de l\'ajout d\'utilisateur' });
+    }
+};  

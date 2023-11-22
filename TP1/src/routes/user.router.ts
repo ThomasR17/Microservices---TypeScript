@@ -22,6 +22,19 @@ async function userRouter(fastify: FastifyInstance) {
 	url: '/user/:id',
 	handler: controllers.getUserByID,
   })
+
+  //db
+  fastify.route({
+	method: 'GET',
+	url: '/db/',
+	handler: controllers.dblistUsers,
+  })
+
+  fastify.route({
+	method: 'POST',
+	url: '/db/',
+	handler: controllers.dbaddUsers,
+  })
 }
 
 export default userRouter

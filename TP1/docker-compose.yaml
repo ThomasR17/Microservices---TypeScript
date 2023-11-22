@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  TP1:
+    build: ./TP1
+    ports:
+      - "50001:5000"
+    volumes:
+      - ./TP1:/app
+    command: npm start
+  auth:
+    build: ./auth-api
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./auth-api:/app
+    depends_on:
+      - TP1
+  db:
+    image: postgres:12.1-alpine
+    environment:
+      - POSTGRES_USER: postgres
+      - POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB: users
+    ports:
+      - "5432:5432"
