@@ -1,5 +1,5 @@
 # Architecture des Microservices
-![Architecture](architecture.pdf)
+![Architecture](architecture.PNG)
 
 ## Authentification Service
 - Gestion de compte:
