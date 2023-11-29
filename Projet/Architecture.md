@@ -1,6 +1,5 @@
 # Architecture des Microservices
-![Architecture](Architecture - Microservices Pokemon.vpd.pdf)
-
+![Architecture](architecture.pdf)
 
 ## Authentification Service
 - Gestion de compte:
